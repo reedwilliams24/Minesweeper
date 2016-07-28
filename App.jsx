@@ -1,16 +1,15 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
+var Game = require('./components/Game');
 
-var Game = React.createClass({
+var App = React.createClass({
   render: function() {
     return (
-      <div>
-        Hello world!
-      </div>
+      <Game/>
     );
   }
 });
 
 window.addEventListener('DOMContentLoaded', function(){
-  ReactDOM.render(<Game/>, document.getElementById('mount'));
+  ReactDOM.render(<App/>, document.getElementById('mount'));
 });

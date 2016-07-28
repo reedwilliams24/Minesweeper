@@ -5,7 +5,7 @@ var Game = React.createClass({
   render: function() {
     return (
       <div>
-        Hello world
+        Hello world!
       </div>
     );
   }

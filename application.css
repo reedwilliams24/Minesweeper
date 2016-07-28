@@ -20,7 +20,9 @@
 
 .bomb {
   background: red;
+  border: solid red 1px;
 }
 .flag {
   background: green;
+  border: solid green 1px;
 }

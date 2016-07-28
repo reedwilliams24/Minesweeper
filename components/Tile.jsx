@@ -40,7 +40,11 @@ var Tile = React.createClass({
       return 'B';
     }
     else {
-      return tile.adjacentBombCount();
+      var bombCount = tile.adjacentBombCount();
+      if (bombCount !== 0){
+        return bombCount;
+      }
+      //return tile.adjacentBombCount();
     }
   }
 

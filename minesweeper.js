@@ -25,7 +25,11 @@ Tile.prototype.explore = function () {
 
   this.explored = true;
 
-  // add more here TODO
+  if (this.adjacentBombCount() === 0){
+    this.neighboringPositions().forEach(function(pos){
+      this.board.grid[pos[0]][pos[1]].explore();
+    }.bind(this));
+  }
 };
 
 Tile.DELTAS = [
@@ -35,14 +39,31 @@ Tile.DELTAS = [
 Tile.prototype.adjacentBombCount = function(){
   var count = 0;
 
+  this.neighboringPositions().forEach(function(pos){
+    if (this.board.grid[pos[0]][pos[1]].bombed) count+=1;
+  }.bind(this));
+
+  // Tile.DELTAS.forEach(function(delta){
+  //   var newPos = [this.pos[0] + delta[0], this.pos[1] + delta[1]];
+  //   if (this.board.inBounds(newPos)){
+  //     if (this.board.grid[newPos[0]][newPos[1]].bombed) count+=1;
+  //   }
+  // }.bind(this));
+
+  return count;
+};
+
+Tile.prototype.neighboringPositions = function(){
+  var neighbors = [];
+
   Tile.DELTAS.forEach(function(delta){
     var newPos = [this.pos[0] + delta[0], this.pos[1] + delta[1]];
     if (this.board.inBounds(newPos)){
-      if (this.board.grid[newPos[0]][newPos[1]].bombed) count+=1;
+      neighbors.push(newPos);
     }
   }.bind(this));
 
-  return count;
+  return neighbors;
 };
 
 function Board (gridSize, numBombs) {

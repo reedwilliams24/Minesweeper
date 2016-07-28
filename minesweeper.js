@@ -28,7 +28,22 @@ Tile.prototype.explore = function () {
   // add more here TODO
 };
 
+Tile.DELTAS = [
+  [1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1],[0,-1],[1,-1]
+]
 
+Tile.prototype.adjacentBombCount = function(){
+  var count = 0;
+
+  Tile.DELTAS.forEach(function(delta){
+    var newPos = [this.pos[0] + delta[0], this.pos[1] + delta[1]];
+    if (this.board.inBounds(newPos)){
+      if (this.board.grid[newPos[0]][newPos[1]].bombed) count+=1;
+    }
+  }.bind(this));
+
+  return count;
+};
 
 function Board (gridSize, numBombs) {
   this.gridSize = gridSize;
@@ -60,6 +75,13 @@ Board.prototype.plantBombs = function() {
       bombCount+=1;
     }
   }
+};
+
+Board.prototype.inBounds = function (pos) {
+  return (
+    pos[0] >= 0 && pos[0] < this.gridSize &&
+    pos[1] >= 0 && pos[1] < this.gridSize
+  );
 };
 
 module.exports = {

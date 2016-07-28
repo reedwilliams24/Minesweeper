@@ -13,3 +13,14 @@
   text-align: center;
   border: solid grey 1px;
 }
+
+.explored {
+  background: grey;
+}
+
+.bomb {
+  background: red;
+}
+.flag {
+  background: green;
+}

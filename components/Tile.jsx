@@ -3,8 +3,10 @@ var React = require('react');
 var Tile = React.createClass({
 
   render: function() {
+    var classNames = 'tile ' + this.tileStatus();
+
     return (
-      <div className='tile' onClick={this.handleClick}>
+      <div className={classNames} onClick={this.handleClick}>
         {this.printTile()}
       </div>
     );
@@ -15,17 +17,30 @@ var Tile = React.createClass({
     this.props.updateGame(this.props.tile, flagClick);
   },
 
-  printTile: function(){
+  tileStatus: function(){
     var tile = this.props.tile;
-    if (tile.flagged && !tile.explored) return 'F';
+    if (tile.flagged && !tile.explored) return 'flag';
     if (!tile.explored) return '';
 
     if (tile.bombed === true){
-      return 'B';
+      return 'bomb';
     } else if (tile.flagged === true){
-      return 'F';
+      return 'flag';
     } else {
-      return 'E';
+      return 'explored';
+    }
+  },
+
+  printTile: function(){
+    var tile = this.props.tile;
+
+    if (tile.flagged) return 'F';
+    if (!tile.explored) return '';
+    if (tile.bombed){
+      return 'B';
+    }
+    else {
+      return tile.adjacentBombCount();
     }
   }
 

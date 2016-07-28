@@ -13,8 +13,10 @@ Tile.prototype.plantBomb = function () {
 Tile.prototype.toggleFlag = function () {
   if (this.flagged){
     this.flagged = false;
+    this.board.decreaseFlagCount();
   } else {
     this.flagged = true;
+    this.board.increaseFlagCount();
   }
 };
 
@@ -43,13 +45,6 @@ Tile.prototype.adjacentBombCount = function(){
     if (this.board.grid[pos[0]][pos[1]].bombed) count+=1;
   }.bind(this));
 
-  // Tile.DELTAS.forEach(function(delta){
-  //   var newPos = [this.pos[0] + delta[0], this.pos[1] + delta[1]];
-  //   if (this.board.inBounds(newPos)){
-  //     if (this.board.grid[newPos[0]][newPos[1]].bombed) count+=1;
-  //   }
-  // }.bind(this));
-
   return count;
 };
 
@@ -70,6 +65,7 @@ function Board (gridSize, numBombs) {
   this.gridSize = gridSize;
   this.numBombs = numBombs;
   this.grid = [];
+  this.flagCount = 0;
   this.generateBoard();
   this.plantBombs();
 }
@@ -104,6 +100,46 @@ Board.prototype.inBounds = function (pos) {
     pos[1] >= 0 && pos[1] < this.gridSize
   );
 };
+
+Board.prototype.gameOver = function () {
+  var won = true;
+  var lost = false;
+
+  this.grid.forEach(function(row){
+    row.forEach(function(tile){
+      if (tile.bombed && tile.explored) lost = true;
+      if ((tile.bombed && !tile.flagged) || (!tile.bombed && !tile.explored)){
+        won = false;
+      }
+    })
+  });
+
+  return (won || lost);
+};
+
+Board.prototype.won = function () {
+  var won = true;
+
+  this.grid.forEach(function(row){
+    row.forEach(function(tile){
+      if ((tile.bombed && !tile.flagged) || (!tile.bombed && !tile.explored)){
+        won = false;
+      }
+    })
+  });
+
+  return won;
+};
+
+Board.prototype.increaseFlagCount = function() {
+  this.flagCount += 1;
+}
+
+Board.prototype.decreaseFlagCount = function() {
+  this.flagCount -= 1;
+}
+
+
 
 module.exports = {
   Tile,

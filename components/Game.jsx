@@ -19,8 +19,28 @@ var Game = React.createClass({
   },
 
   render: function() {
+    var gameOver = this.state.board.gameOver();
+    var gameText = '';
+    if (gameOver){
+      if (this.state.board.won()) {
+        gameText = 'Winner!';
+      } else {
+        gameText = 'Game Over';
+      }
+    }
+
     return (
-      <Board board={this.state.board} updateGame={this.updateGame}/>
+      <div>
+        <div id='scoreboard'>
+          <div id='flagCount'>
+            {this.state.board.numBombs - this.state.board.flagCount}
+          </div>
+          <div>
+            {gameText}
+          </div>
+        </div>
+        <Board board={this.state.board} updateGame={this.updateGame}/>
+      </div>
     );
   }
 

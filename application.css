@@ -30,7 +30,21 @@
   display: flex;
   width: 220px;
   padding: 5px 0px 5px 0px;
-  justify-content: center;
+  justify-content: space-around;
+  align-items: center;
+}
+
+#restart-button {
+  border: 0px;
+  background: #78909C;
+  border-radius: 5px;
+  font-size: 14px;
+  padding: 3px 5px 3px 5px;
+  cursor: pointer;
+}
+
+#restart-button:hover {
+  background: #546E7A;
 }
 
 .tile {

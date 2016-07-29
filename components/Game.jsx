@@ -11,14 +11,6 @@ var Game = React.createClass({
     };
   },
 
-  componentDidMount: function() {
-    window.setInterval(function(){
-      this.setState({
-        secondsElapsed: this.state.secondsElapsed + 1
-      });
-    }.bind(this), 1000);
-  },
-
   updateGame: function(tile, flagged) {
     if (flagged){
       tile.toggleFlag();
@@ -29,18 +21,57 @@ var Game = React.createClass({
       tile.explore();
     }
 
+    if (this.state.intervalId === undefined) this.startTimer();
+
     this.setState({ board: this.state.board});
   },
 
+  restartGame: function() {
+    var board = new Minesweeper.Board(10, 10);
+    this.stopTimer();
+
+    this.setState({
+      board: board,
+      secondsElapsed: 0,
+      intervalId: undefined
+    });
+  },
+
+  startTimer: function(){
+    var id = window.setInterval(function(){
+      this.setState({
+        secondsElapsed: this.state.secondsElapsed + 1
+      });
+    }.bind(this), 1000);
+
+    this.setState({intervalId: id});
+  },
+
+  stopTimer: function() {
+    window.clearInterval(this.state.intervalId);
+  },
+
   render: function() {
-    var gameOver = this.state.board.gameOver();
-    var gameText = '';
-    if (gameOver){
+    var gameStatus;
+    if (this.state.board.gameOver()){
+      this.stopTimer();
+
+      var gameText;
       if (this.state.board.won()) {
         gameText = 'Winner!';
       } else {
         gameText = 'Game Over';
       }
+
+      gameStatus = (
+        <div id='status'>
+          <div>{gameText}</div>
+          <button
+            id='restart-button'
+            onClick={this.restartGame}>Restart</button>
+        </div>
+      );
+
     }
 
     return (
@@ -54,9 +85,7 @@ var Game = React.createClass({
           </div>
         </div>
         <Board board={this.state.board} updateGame={this.updateGame}/>
-        <div id='status'>
-          {gameText}
-        </div>
+        {gameStatus}
       </div>
     );
   },

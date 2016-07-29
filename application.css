@@ -100,3 +100,23 @@
 .flag:hover {
   background: #4CAF50;
 }
+
+#header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#title {
+  font-size: 28px;
+  padding: 15px 5px 5px 5px;
+  text-align: center;
+  width: 100%;
+}
+
+#instructions {
+  font-size: 14px;
+  padding-bottom: 25px;
+  width: 100%;
+  text-align: center;
+}

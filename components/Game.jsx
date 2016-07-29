@@ -62,7 +62,6 @@ var Game = React.createClass({
     };
 
     window.onkeyup = function(e){
-      console.log('up.');
       $('.tile').css('cursor', 'pointer');
     };
   },

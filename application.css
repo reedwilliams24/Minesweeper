@@ -1,0 +1,138 @@
+body {
+  font-family: arial;
+}
+
+#game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 20px;
+}
+
+#info {
+  display: flex;
+  width: 320px;
+  padding: 5px 0px 10px 0px;
+  justify-content: space-around;
+}
+
+#flag-count {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20%;
+  text-align: center;
+  padding: 5px 0px 5px 0px;
+  border-radius: 5px;
+  border: solid #9E9E9E 1px;
+}
+
+#timer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20%;
+  text-align: center;
+  padding: 5px 0px 5px 0px;
+  border-radius: 5px;
+  border: solid #9E9E9E 1px;
+}
+
+#board {
+  display: flex;
+  width: 320px;
+  height: 320px;
+}
+
+#status {
+  display: flex;
+  width: 320px;
+  padding-top: 10px;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 100;
+  font-size: 18px;
+}
+
+#restart-button {
+  border: 0px;
+  background: #9E9E9E;
+  border-radius: 5px;
+  font-size: 18px;
+  padding: 3px 5px 3px 5px;
+  cursor: pointer;
+}
+
+#restart-button:hover {
+  background: #757575;
+}
+
+#modal-screen {
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
+.tile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  border: solid #9E9E9E 1px;
+  cursor: pointer;
+}
+
+.tile:hover {
+  background: lightgrey;
+}
+
+.explored {
+  background: #9E9E9E;
+}
+
+.explored:hover {
+  background: #9E9E9E;
+}
+
+.bomb {
+  background: #f44336;
+  border: solid #f44336 1px;
+}
+
+.bomb:hover {
+  background: #f44336;
+}
+
+.flag {
+  background: #4CAF50;
+  border: solid #4CAF50 1px;
+}
+
+.flag:hover {
+  background: #4CAF50;
+}
+
+#header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#title {
+  font-size: 28px;
+  padding: 15px 5px 5px 5px;
+  text-align: center;
+  width: 100%;
+}
+
+#instructions {
+  font-size: 14px;
+  padding-bottom: 25px;
+  width: 100%;
+  text-align: center;
+}

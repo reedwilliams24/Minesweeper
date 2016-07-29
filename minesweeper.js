@@ -27,7 +27,7 @@ Tile.prototype.explore = function () {
 
   this.explored = true;
 
-  if (this.adjacentBombCount() === 0){
+  if (this.adjacentBombCount() === 0 && !this.bombed){
     this.neighboringPositions().forEach(function(pos){
       this.board.grid[pos[0]][pos[1]].explore();
     }.bind(this));

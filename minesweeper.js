@@ -10,9 +10,13 @@ Tile.prototype.plantBomb = function () {
   this.bombed = true;
 };
 
+Tile.prototype.removeBomb = function () {
+  this.bombed = false;
+};
+
 Tile.prototype.toggleFlag = function () {
   if (this.explored) return this;
-  
+
   if (this.flagged){
     this.flagged = false;
     this.board.decreaseFlagCount();
@@ -83,15 +87,39 @@ Board.prototype.generateBoard = function () {
 };
 
 Board.prototype.plantBombs = function() {
-  var bombCount = 0;
-  while (bombCount < this.numBombs){
-    var row = Math.floor(Math.random() * this.gridSize);
-    var col = Math.floor(Math.random() * this.gridSize);
-    var tile = this.grid[row][col];
 
-    if (!tile.bombed){
-      tile.plantBomb();
-      bombCount+=1;
+  // plant bombs in a row
+  var bombCount = 0;
+
+  for (var row = 0; row < this.gridSize; row++){
+    for (var col = 0; col < this.gridSize; col++){
+      this.grid[col][row].plantBomb();
+      bombCount += 1;
+      if (bombCount === this.numBombs) break;
+    }
+    if (bombCount === this.numBombs) break;
+  }
+
+  // shuffle bomb placement
+  var positions = [];
+  for (row = 0; row < this.gridSize; row++){
+    for (col = 0; col < this.gridSize; col++){
+      if (row !== 0 || col > 1){
+        var randomPosition = positions[Math.floor(Math.random() * positions.length)];
+        var currentTile = this.grid[col][row];
+        var otherTile = this.grid[randomPosition[0]][randomPosition[1]];
+
+        if ((currentTile.bombed && !otherTile.bombed) || (!currentTile.bombed && otherTile.bombed)){
+          if (currentTile.bombed){
+            currentTile.removeBomb();
+            otherTile.plantBomb();
+          } else {
+            otherTile.removeBomb();
+            currentTile.plantBomb();
+          }
+        }
+      }
+      positions.push([col, row]);
     }
   }
 };

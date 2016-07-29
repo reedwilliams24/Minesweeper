@@ -11,6 +11,20 @@ var Game = React.createClass({
       secondsElapsed: 0
     };
   },
+  
+  componentDidMount: function() {
+    window.onkeydown = function(e){
+      if (e.altKey){
+        $('.tile').css('cursor', 'n-resize');
+        $('.explored').css('cursor', 'pointer');
+        $('.flag').css('cursor', 's-resize');
+      }
+    };
+
+    window.onkeyup = function(e){
+      $('.tile').css('cursor', 'pointer');
+    };
+  },
 
   updateGame: function(tile, flagged) {
     if (flagged){
@@ -29,7 +43,6 @@ var Game = React.createClass({
 
   restartGame: function() {
     var board = new Minesweeper.Board(10, 10);
-    this.stopTimer();
 
     this.setState({
       board: board,
@@ -52,19 +65,6 @@ var Game = React.createClass({
     window.clearInterval(this.state.intervalId);
   },
 
-  componentDidMount: function() {
-    window.onkeydown = function(e){
-      if (e.altKey){
-        $('.tile').css('cursor', 'n-resize');
-        $('.explored').css('cursor', 'pointer');
-        $('.flag').css('cursor', 's-resize');
-      }
-    };
-
-    window.onkeyup = function(e){
-      $('.tile').css('cursor', 'pointer');
-    };
-  },
 
   render: function() {
     var gameStatus;

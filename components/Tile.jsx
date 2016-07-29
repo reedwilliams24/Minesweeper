@@ -44,7 +44,6 @@ var Tile = React.createClass({
       if (bombCount !== 0){
         return bombCount;
       }
-      //return tile.adjacentBombCount();
     }
   }
 

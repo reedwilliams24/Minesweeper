@@ -1,6 +1,7 @@
 var React = require('react');
 var Board = require('./Board');
 var Minesweeper = require('../minesweeper');
+var $ = require('jquery');
 
 var Game = React.createClass({
   getInitialState: function() {
@@ -49,6 +50,21 @@ var Game = React.createClass({
 
   stopTimer: function() {
     window.clearInterval(this.state.intervalId);
+  },
+
+  componentDidMount: function() {
+    window.onkeydown = function(e){
+      if (e.altKey){
+        $('.tile').css('cursor', 'n-resize');
+        $('.explored').css('cursor', 'pointer');
+        $('.flag').css('cursor', 's-resize');
+      }
+    };
+
+    window.onkeyup = function(e){
+      console.log('up.');
+      $('.tile').css('cursor', 'pointer');
+    };
   },
 
   render: function() {

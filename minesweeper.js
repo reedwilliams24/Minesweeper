@@ -11,6 +11,8 @@ Tile.prototype.plantBomb = function () {
 };
 
 Tile.prototype.toggleFlag = function () {
+  if (this.explored) return this;
+  
   if (this.flagged){
     this.flagged = false;
     this.board.decreaseFlagCount();

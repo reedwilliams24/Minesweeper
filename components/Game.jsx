@@ -54,7 +54,7 @@ var Game = React.createClass({
           </div>
         </div>
         <Board board={this.state.board} updateGame={this.updateGame}/>
-        <div>
+        <div id='status'>
           {gameText}
         </div>
       </div>

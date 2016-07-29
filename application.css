@@ -7,6 +7,7 @@
 #info {
   display: flex;
   width: 220px;
+  padding: 5px 0px 5px 0px;
 }
 
 #flag-count {
@@ -25,6 +26,13 @@
   height: 220px;
 }
 
+#status {
+  display: flex;
+  width: 220px;
+  padding: 5px 0px 5px 0px;
+  justify-content: center;
+}
+
 .tile {
   display: flex;
   justify-content: center;
@@ -33,9 +41,18 @@
   height: 20px;
   text-align: center;
   border: solid grey 1px;
+  cursor: pointer;
+}
+
+.tile:hover {
+  background: lightgrey;
 }
 
 .explored {
+  background: grey;
+}
+
+.explored:hover {
   background: grey;
 }
 
@@ -43,7 +60,16 @@
   background: red;
   border: solid red 1px;
 }
+
+.bomb:hover {
+  background: red;
+}
+
 .flag {
   background: green;
   border: solid green 1px;
+}
+
+.flag:hover {
+  background: green;
 }

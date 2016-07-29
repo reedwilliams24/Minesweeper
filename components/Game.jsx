@@ -68,6 +68,8 @@ var Game = React.createClass({
 
   render: function() {
     var gameStatus;
+    var modal;
+
     if (this.state.board.gameOver()){
       this.stopTimer();
 
@@ -87,6 +89,10 @@ var Game = React.createClass({
         </div>
       );
 
+      modal = (
+        <div id='modal-screen'>
+        </div>
+      );
     }
 
     return (
@@ -101,6 +107,7 @@ var Game = React.createClass({
         </div>
         <Board board={this.state.board} updateGame={this.updateGame}/>
         {gameStatus}
+        {modal}
       </div>
     );
   },

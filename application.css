@@ -33,11 +33,12 @@
   padding: 5px 0px 5px 0px;
   justify-content: space-around;
   align-items: center;
+  z-index: 100;
 }
 
 #restart-button {
   border: 0px;
-  background: #78909C;
+  background: #9E9E9E;
   border-radius: 5px;
   font-size: 14px;
   padding: 3px 5px 3px 5px;
@@ -45,7 +46,16 @@
 }
 
 #restart-button:hover {
-  background: #546E7A;
+  background: #757575;
+}
+
+#modal-screen {
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
 }
 
 .tile {
@@ -55,7 +65,7 @@
   width: 20px;
   height: 20px;
   text-align: center;
-  border: solid grey 1px;
+  border: solid #9E9E9E 1px;
   cursor: pointer;
 }
 
@@ -64,20 +74,20 @@
 }
 
 .explored {
-  background: grey;
+  background: #9E9E9E;
 }
 
 .explored:hover {
-  background: grey;
+  background: #9E9E9E;
 }
 
 .bomb {
-  background: red;
-  border: solid red 1px;
+  background: #f44336;
+  border: solid #f44336 1px;
 }
 
 .bomb:hover {
-  background: red;
+  background: #f44336;
 }
 
 .flag {

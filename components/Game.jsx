@@ -11,7 +11,7 @@ var Game = React.createClass({
       secondsElapsed: 0
     };
   },
-  
+
   componentDidMount: function() {
     window.onkeydown = function(e){
       if (e.altKey){
@@ -37,6 +37,7 @@ var Game = React.createClass({
     }
 
     if (this.state.intervalId === undefined) this.startTimer();
+    if (this.state.board.gameOver()) this.stopTimer();
 
     this.setState({ board: this.state.board});
   },
@@ -71,9 +72,8 @@ var Game = React.createClass({
     var modal;
 
     if (this.state.board.gameOver()){
-      this.stopTimer();
-
       var gameText;
+
       if (this.state.board.won()) {
         gameText = 'Winner!';
       } else {

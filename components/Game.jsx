@@ -65,13 +65,15 @@ var Game = React.createClass({
   },
 
   startTimer: function(){
-    var id = window.setInterval(function(){
-      this.setState({
-        secondsElapsed: this.state.secondsElapsed + 1
-      });
-    }.bind(this), 1000);
-
-    this.setState({intervalId: id});
+    // start timer if a mine was not tripped
+    if (!this.state.board.gameOver()){
+      var id = window.setInterval(function(){
+        this.setState({
+          secondsElapsed: this.state.secondsElapsed + 1
+        });
+      }.bind(this), 1000);
+      this.setState({intervalId: id});
+    }
   },
 
   stopTimer: function() {

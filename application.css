@@ -56,40 +56,22 @@ body {
 
 #restart-button {
   border: 0px;
-  background: #9E9E9E;
+  background: #C4C4C4;
   border-radius: 5px;
   font-size: 18px;
   padding: 3px 5px 3px 5px;
   cursor: pointer;
-  box-shadow: 0 3px black;
   outline: none;
 }
 
 #restart-button:hover {
-  background: #757575;
+  background: #ABABAB;
 }
 
 #restart-button:active {
-  transform: translateY(1px);
-  box-shadow: 0 2px black;
+  background: #919191;
+  transform: scale(.95);
 }
-
-/*display: inline-block;
-padding: 15px 25px;
-font-size: 24px;
-cursor: pointer;
-text-align: center;
-text-decoration: none;
-outline: none;
-color: #fff;
-background-color: #4CAF50;
-border: none;
-border-radius: 15px;
-box-shadow: 0 9px #999;*/
-
-/*background-color: #3e8e41;
-box-shadow: 0 5px #666;
-transform: translateY(4px);*/
 
 #modal-screen {
   position: absolute;

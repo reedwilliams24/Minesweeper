@@ -14,8 +14,6 @@ Tile.prototype.toggleMine = function () {
 };
 
 Tile.prototype.toggleFlag = function () {
-  if (this.explored) return this;
-
   if (this.flagged){
     this.flagged = false;
   } else {

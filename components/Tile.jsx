@@ -14,6 +14,7 @@ var Tile = React.createClass({
 
   handleClick: function(e){
     var flagClick = e.altKey ? true : false;
+    if (this.explored) return;
     this.props.updateGame(this.props.tile, flagClick);
   },
 

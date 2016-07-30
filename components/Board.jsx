@@ -28,7 +28,8 @@ var Board = React.createClass({
         <Tile
           tile={tile}
           key={i * board.gridSize + j}
-          updateGame={this.props.updateGame}/>
+          updateGame={this.props.updateGame}
+          board={board}/>
       );
     }.bind(this));
   }

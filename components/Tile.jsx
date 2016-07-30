@@ -36,11 +36,13 @@ var Tile = React.createClass({
 
     if (tile.flagged) return 'F';
     if (!tile.explored) return '';
+
     if (tile.bombed){
       return 'X';
     }
     else {
-      var bombCount = tile.adjacentBombCount();
+      // var bombCount = tile.adjacentBombCount();
+      var bombCount = this.props.board.adjacentBombCount(tile);
       if (bombCount !== 0){
         return bombCount;
       }

@@ -27,13 +27,26 @@ var Game = React.createClass({
   },
 
   updateGame: function(tile, flagged) {
+    var board = this.state.board;
+
     if (flagged){
       tile.toggleFlag();
+
+      if (tile.flagged){
+        board.increaseFlagCount();
+      } else {
+        board.decreaseFlagCount();
+      }
+
+      // not enough flags
       if (this.state.board.numBombs - this.state.board.flagCount < 0) {
         tile.toggleFlag();
+        board.decreaseFlagCount();
       }
+
     } else {
-      tile.explore();
+      this.state.board.explore(tile);
+      // tile.explore();
     }
 
     if (this.state.intervalId === undefined) this.startTimer();
@@ -65,7 +78,6 @@ var Game = React.createClass({
   stopTimer: function() {
     window.clearInterval(this.state.intervalId);
   },
-
 
   render: function() {
     var gameStatus;

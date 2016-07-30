@@ -6,12 +6,12 @@ function Tile (board, pos) {
   this.flagged = false;
 }
 
-Tile.prototype.plantBomb = function () {
-  this.bombed = true;
-};
-
-Tile.prototype.removeBomb = function () {
-  this.bombed = false;
+Tile.prototype.toggleBomb = function () {
+  if (this.bombed) {
+    this.bombed = false;
+  } else {
+    this.bombed = true;
+  }
 };
 
 Tile.prototype.toggleFlag = function () {
@@ -93,7 +93,7 @@ Board.prototype.plantBombs = function() {
 
   for (var row = 0; row < this.gridSize; row++){
     for (var col = 0; col < this.gridSize; col++){
-      this.grid[col][row].plantBomb();
+      this.grid[col][row].toggleBomb();
       bombCount += 1;
       if (bombCount === this.numBombs) break;
     }
@@ -110,13 +110,8 @@ Board.prototype.plantBombs = function() {
         var otherTile = this.grid[randomPosition[0]][randomPosition[1]];
 
         if ((currentTile.bombed && !otherTile.bombed) || (!currentTile.bombed && otherTile.bombed)){
-          if (currentTile.bombed){
-            currentTile.removeBomb();
-            otherTile.plantBomb();
-          } else {
-            otherTile.removeBomb();
-            currentTile.plantBomb();
-          }
+          currentTile.toggleBomb();
+          otherTile.toggleBomb();
         }
       }
       positions.push([col, row]);
@@ -131,6 +126,7 @@ Board.prototype.inBounds = function (pos) {
   );
 };
 
+// TODO return early if lost or won
 Board.prototype.gameOver = function () {
   var won = true;
   var lost = false;
@@ -147,6 +143,7 @@ Board.prototype.gameOver = function () {
   return (won || lost);
 };
 
+// TODO return early if won
 Board.prototype.won = function () {
   var won = true;
 
@@ -168,8 +165,6 @@ Board.prototype.increaseFlagCount = function() {
 Board.prototype.decreaseFlagCount = function() {
   this.flagCount -= 1;
 }
-
-
 
 module.exports = {
   Tile,

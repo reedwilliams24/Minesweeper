@@ -127,9 +127,7 @@ Board.prototype.neighboringPositions = function (tile) {
 
   Board.DELTAS.forEach(function(delta){
     var newPos = [tile.pos[0] + delta[0], tile.pos[1] + delta[1]];
-    if (this.inBounds(newPos)){
-      neighbors.push(newPos);
-    }
+    if (this.inBounds(newPos)) neighbors.push(newPos);
   }.bind(this));
 
   return neighbors;

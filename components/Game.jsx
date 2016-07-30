@@ -27,8 +27,9 @@ var Game = React.createClass({
   },
 
   updateGame: function(tile, flagged) {
-    var board = this.state.board;
+    if (tile.explored) return tile;
 
+    var board = this.state.board;
     if (flagged){
       tile.toggleFlag();
 

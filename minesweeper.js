@@ -1,15 +1,15 @@
 function Tile (pos) {
   this.pos = pos;
-  this.bombed = false;
+  this.mine = false;
   this.explored = false;
   this.flagged = false;
 }
 
-Tile.prototype.toggleBomb = function () {
-  if (this.bombed) {
-    this.bombed = false;
+Tile.prototype.toggleMine = function () {
+  if (this.mine) {
+    this.mine = false;
   } else {
-    this.bombed = true;
+    this.mine = true;
   }
 };
 
@@ -23,13 +23,15 @@ Tile.prototype.toggleFlag = function () {
   }
 };
 
-function Board (gridSize, numBombs) {
+function Board (gridSize, numMines) {
   this.gridSize = gridSize;
-  this.numBombs = numBombs;
+  this.numMines = numMines;
   this.grid = [];
   this.flagCount = 0;
+  this.exploredTileCount = 0;
+  this.mineTripped = false;
   this.generateBoard();
-  this.plantBombs();
+  this.plantMines();
 }
 
 Board.prototype.generateBoard = function () {
@@ -42,21 +44,20 @@ Board.prototype.generateBoard = function () {
   }
 };
 
-Board.prototype.plantBombs = function() {
-
-  // plant bombs in a row
-  var bombCount = 0;
+Board.prototype.plantMines = function() {
+  // plant mines in a row
+  var mineCount = 0;
 
   for (var row = 0; row < this.gridSize; row++){
     for (var col = 0; col < this.gridSize; col++){
-      this.grid[col][row].toggleBomb();
-      bombCount += 1;
-      if (bombCount === this.numBombs) break;
+      this.grid[col][row].toggleMine();
+      mineCount += 1;
+      if (mineCount === this.numMines) break;
     }
-    if (bombCount === this.numBombs) break;
+    if (mineCount === this.numMines) break;
   }
 
-  // shuffle bomb placement
+  // shuffle mine placement
   var positions = [];
   for (row = 0; row < this.gridSize; row++){
     for (col = 0; col < this.gridSize; col++){
@@ -65,9 +66,9 @@ Board.prototype.plantBombs = function() {
         var currentTile = this.grid[col][row];
         var otherTile = this.grid[randomPosition[0]][randomPosition[1]];
 
-        if ((currentTile.bombed && !otherTile.bombed) || (!currentTile.bombed && otherTile.bombed)){
-          currentTile.toggleBomb();
-          otherTile.toggleBomb();
+        if ((currentTile.mine && !otherTile.mine) || (!currentTile.mine && otherTile.mine)){
+          currentTile.toggleMine();
+          otherTile.toggleMine();
         }
       }
       positions.push([col, row]);
@@ -82,8 +83,8 @@ Board.prototype.gameOver = function () {
 
   this.grid.forEach(function(row){
     row.forEach(function(tile){
-      if (tile.bombed && tile.explored) lost = true;
-      if ((tile.bombed && !tile.flagged) || (!tile.bombed && !tile.explored)){
+      if (tile.mine && tile.explored) lost = true;
+      if ((tile.mine && !tile.flagged) || (!tile.mine && !tile.explored)){
         won = false;
       }
     })
@@ -98,7 +99,7 @@ Board.prototype.won = function () {
 
   this.grid.forEach(function(row){
     row.forEach(function(tile){
-      if ((tile.bombed && !tile.flagged) || (!tile.bombed && !tile.explored)){
+      if ((tile.mine && !tile.flagged) || (!tile.mine && !tile.explored)){
         won = false;
       }
     })
@@ -115,11 +116,11 @@ Board.prototype.decreaseFlagCount = function() {
   this.flagCount -= 1;
 }
 
-Board.prototype.adjacentBombCount = function (tile) {
+Board.prototype.adjacentMineCount = function (tile) {
   var count = 0;
 
   this.neighboringPositions(tile).forEach(function(pos){
-    if (this.grid[pos[0]][pos[1]].bombed) count+=1;
+    if (this.grid[pos[0]][pos[1]].mine) count+=1;
   }.bind(this));
 
   return count;
@@ -150,7 +151,7 @@ Board.prototype.explore = function (tile) {
 
   tile.explored = true;
 
-  if (this.adjacentBombCount(tile) === 0 && !tile.bombed){
+  if (this.adjacentMineCount(tile) === 0 && !tile.mine){
     this.neighboringPositions(tile).forEach(function(pos){
       this.explore(this.grid[pos[0]][pos[1]]);
     }.bind(this));

@@ -99,12 +99,12 @@ body {
   background: #9E9E9E;
 }
 
-.bomb {
+.mine {
   background: #f44336;
   border: solid #f44336 1px;
 }
 
-.bomb:hover {
+.mine:hover {
   background: #f44336;
 }
 

@@ -39,20 +39,19 @@ var Game = React.createClass({
       }
 
       // not enough flags
-      if (this.state.board.numBombs - this.state.board.flagCount < 0) {
+      if (this.state.board.numMines - this.state.board.flagCount < 0) {
         tile.toggleFlag();
         board.decreaseFlagCount();
       }
 
     } else {
       this.state.board.explore(tile);
-      // tile.explore();
     }
 
     if (this.state.intervalId === undefined) this.startTimer();
-    if (this.state.board.gameOver()) this.stopTimer();
+    if (board.gameOver()) this.stopTimer();
 
-    this.setState({ board: this.state.board});
+    this.setState({ board: board});
   },
 
   restartGame: function() {
@@ -111,7 +110,7 @@ var Game = React.createClass({
       <div id='game'>
         <div id='info'>
           <div id='flag-count'>
-            {this.state.board.numBombs - this.state.board.flagCount}
+            {this.state.board.numMines - this.state.board.flagCount}
           </div>
           <div id='timer'>
             {this.printTime()}

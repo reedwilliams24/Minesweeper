@@ -22,8 +22,8 @@ var Tile = React.createClass({
     if (tile.flagged && !tile.explored) return 'flag';
     if (!tile.explored) return '';
 
-    if (tile.bombed === true){
-      return 'bomb';
+    if (tile.mine === true){
+      return 'mine';
     } else if (tile.flagged === true){
       return 'flag';
     } else {
@@ -37,14 +37,14 @@ var Tile = React.createClass({
     if (tile.flagged) return 'F';
     if (!tile.explored) return '';
 
-    if (tile.bombed){
+    if (tile.mine){
       return 'X';
     }
     else {
-      // var bombCount = tile.adjacentBombCount();
-      var bombCount = this.props.board.adjacentBombCount(tile);
-      if (bombCount !== 0){
-        return bombCount;
+      // var mineCount = tile.adjacentMineCount();
+      var mineCount = this.props.board.adjacentMineCount(tile);
+      if (mineCount !== 0){
+        return mineCount;
       }
     }
   }

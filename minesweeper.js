@@ -76,37 +76,21 @@ Board.prototype.plantMines = function() {
   }
 };
 
-// TODO return early if lost or won
 Board.prototype.gameOver = function () {
-  var won = true;
-  var lost = false;
-
-  this.grid.forEach(function(row){
-    row.forEach(function(tile){
-      if (tile.mine && tile.explored) lost = true;
-      if ((tile.mine && !tile.flagged) || (!tile.mine && !tile.explored)){
-        won = false;
-      }
-    })
-  });
-
-  return (won || lost);
+  return (this.won() || this.lost());
 };
 
-// TODO return early if won
 Board.prototype.won = function () {
-  var won = true;
-
-  this.grid.forEach(function(row){
-    row.forEach(function(tile){
-      if ((tile.mine && !tile.flagged) || (!tile.mine && !tile.explored)){
-        won = false;
-      }
-    })
-  });
-
-  return won;
+  var mineCount = Math.pow(this.gridSize, 2);
+  return (
+    (mineCount - this.flagCount - this.exploredTileCount) === 0 && !this.lost()
+  );
 };
+
+Board.prototype.lost = function () {
+  return this.mineTripped;
+};
+
 
 Board.prototype.increaseFlagCount = function() {
   this.flagCount += 1;
@@ -124,6 +108,20 @@ Board.prototype.adjacentMineCount = function (tile) {
   }.bind(this));
 
   return count;
+};
+
+Board.prototype.explore = function (tile) {
+  if (tile.flagged || tile.explored) return tile;
+
+  if (tile.mine) this.mineTripped = true;
+  tile.explored = true;
+  this.exploredTileCount += 1;
+
+  if (this.adjacentMineCount(tile) === 0 && !tile.mine){
+    this.neighboringPositions(tile).forEach(function(pos){
+      this.explore(this.grid[pos[0]][pos[1]]);
+    }.bind(this));
+  }
 };
 
 Board.prototype.neighboringPositions = function (tile) {
@@ -144,18 +142,6 @@ Board.prototype.inBounds = function (pos) {
     pos[0] >= 0 && pos[0] < this.gridSize &&
     pos[1] >= 0 && pos[1] < this.gridSize
   );
-};
-
-Board.prototype.explore = function (tile) {
-  if (tile.flagged || tile.explored) return tile;
-
-  tile.explored = true;
-
-  if (this.adjacentMineCount(tile) === 0 && !tile.mine){
-    this.neighboringPositions(tile).forEach(function(pos){
-      this.explore(this.grid[pos[0]][pos[1]]);
-    }.bind(this));
-  }
 };
 
 Board.DELTAS = [

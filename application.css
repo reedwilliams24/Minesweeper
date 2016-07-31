@@ -1,6 +1,5 @@
 body {
   font-family: arial;
-  background: whitesmoke;
 }
 
 #game {
@@ -57,15 +56,21 @@ body {
 
 #restart-button {
   border: 0px;
-  background: #9E9E9E;
+  background: #C4C4C4;
   border-radius: 5px;
   font-size: 18px;
   padding: 3px 5px 3px 5px;
   cursor: pointer;
+  outline: none;
 }
 
 #restart-button:hover {
-  background: #757575;
+  background: #ABABAB;
+}
+
+#restart-button:active {
+  background: #919191;
+  transform: scale(.95);
 }
 
 #modal-screen {
@@ -88,6 +93,18 @@ body {
   cursor: pointer;
 }
 
+.tile.flagging {
+  cursor: n-resize;
+}
+
+.tile.flag.flagging {
+  cursor: s-resize;
+}
+
+.tile.explored.flagging {
+  cursor: pointer;
+}
+
 .tile:hover {
   background: lightgrey;
 }
@@ -100,12 +117,12 @@ body {
   background: #9E9E9E;
 }
 
-.bomb {
+.mine {
   background: #f44336;
   border: solid #f44336 1px;
 }
 
-.bomb:hover {
+.mine:hover {
   background: #f44336;
 }
 

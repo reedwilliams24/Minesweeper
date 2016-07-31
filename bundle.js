@@ -21233,7 +21233,7 @@
 	      React.createElement(Board, {
 	        board: this.state.board,
 	        updateGame: this.updateGame,
-	        altKey: this.state.altPressed }),
+	        altPressed: this.state.altPressed }),
 	      gameStatus,
 	      modal
 	    );
@@ -21296,7 +21296,7 @@
 	        key: i * board.gridSize + j,
 	        updateGame: this.props.updateGame,
 	        board: board,
-	        altKey: this.props.altKey });
+	        altPressed: this.props.altKey });
 	    }.bind(this));
 	  }
 	

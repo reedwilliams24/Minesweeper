@@ -21315,49 +21315,56 @@
 	var Tile = React.createClass({
 	  displayName: 'Tile',
 	
-	
 	  render: function render() {
-	    var classNames = 'tile ' + this.tileStatus();
-	
 	    return React.createElement(
 	      'div',
-	      { className: classNames, onClick: this.handleClick },
-	      this.printTile()
+	      {
+	        className: 'tile ' + this.classNames(),
+	        onClick: this.handleClick },
+	      this.value()
 	    );
 	  },
 	
 	  handleClick: function handleClick(e) {
 	    var flagClick = e.altKey ? true : false;
+	    if (this.explored) return;
 	    this.props.updateGame(this.props.tile, flagClick);
 	  },
 	
-	  tileStatus: function tileStatus() {
+	  classNames: function classNames() {
 	    var tile = this.props.tile;
-	    if (tile.flagged && !tile.explored) return 'flag';
-	    if (!tile.explored) return '';
 	
-	    if (tile.bombed === true) {
-	      return 'bomb';
-	    } else if (tile.flagged === true) {
-	      return 'flag';
+	    var flagging = this.props.altKey;
+	    if (flagging) {
+	      flagging = 'flagging ';
 	    } else {
-	      return 'explored';
+	      flagging = '';
+	    }
+	
+	    if (tile.flagged) {
+	      return flagging + 'flag';
+	    } else if (!tile.explored) {
+	      return flagging;
+	    } else if (tile.mine) {
+	      return flagging + 'mine';
+	    } else {
+	      return flagging + 'explored';
 	    }
 	  },
 	
-	  printTile: function printTile() {
+	  value: function value() {
 	    var tile = this.props.tile;
 	
-	    if (tile.flagged) return 'F';
-	    if (!tile.explored) return '';
-	    if (tile.bombed) {
+	    if (tile.flagged) {
+	      return 'F';
+	    } else if (!tile.explored) {
+	      return '';
+	    } else if (tile.mine) {
 	      return 'X';
 	    } else {
-	      var bombCount = tile.adjacentBombCount();
-	      if (bombCount !== 0) {
-	        return bombCount;
-	      }
-	      //return tile.adjacentBombCount();
+	      var mineCount = this.props.board.adjacentMineCount(tile);
+	      if (mineCount !== 0) return mineCount;
+	      return '';
 	    }
 	  }
 	

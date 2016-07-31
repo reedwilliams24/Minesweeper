@@ -1,50 +1,56 @@
 var React = require('react');
 
 var Tile = React.createClass({
-
   render: function() {
-    var classNames = 'tile ' + this.tileStatus();
-
     return (
-      <div className={classNames} onClick={this.handleClick}>
-        {this.printTile()}
+      <div
+        className={'tile ' + this.classNames()}
+        onClick={this.handleClick}>
+        {this.value()}
       </div>
     );
   },
 
   handleClick: function(e){
     var flagClick = e.altKey ? true : false;
+    if (this.explored) return;
     this.props.updateGame(this.props.tile, flagClick);
   },
 
-  tileStatus: function(){
+  classNames: function(){
     var tile = this.props.tile;
-    if (tile.flagged && !tile.explored) return 'flag';
-    if (!tile.explored) return '';
 
-    if (tile.bombed === true){
-      return 'bomb';
-    } else if (tile.flagged === true){
-      return 'flag';
+    var flagging = this.props.altKey;
+    if (flagging){
+      flagging = 'flagging ';
     } else {
-      return 'explored';
+      flagging = '';
+    }
+
+    if (tile.flagged){
+      return flagging + 'flag';
+    } else if (!tile.explored){
+      return flagging;
+    } else if (tile.mine){
+      return flagging + 'mine';
+    } else {
+      return flagging + 'explored';
     }
   },
 
-  printTile: function(){
+  value: function(){
     var tile = this.props.tile;
 
-    if (tile.flagged) return 'F';
-    if (!tile.explored) return '';
-    if (tile.bombed){
+    if (tile.flagged){
+      return 'F';
+    } else if (!tile.explored){
+      return '';
+    } else if (tile.mine){
       return 'X';
-    }
-    else {
-      var bombCount = tile.adjacentBombCount();
-      if (bombCount !== 0){
-        return bombCount;
-      }
-      //return tile.adjacentBombCount();
+    } else {
+      var mineCount = this.props.board.adjacentMineCount(tile);
+      if (mineCount !== 0) return mineCount;
+      return '';
     }
   }
 

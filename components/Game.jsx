@@ -1,29 +1,25 @@
 var React = require('react');
 var Board = require('./Board');
 var Minesweeper = require('../minesweeper');
-var $ = require('jquery');
 
 var Game = React.createClass({
   getInitialState: function() {
     var board = new Minesweeper.Board(10, 10);
     return {
       board: board,
-      secondsElapsed: 0
+      secondsElapsed: 0,
+      altPressed: false
     };
   },
 
   componentDidMount: function() {
     window.onkeydown = function(e){
-      if (e.altKey){
-        $('.tile').css('cursor', 'n-resize');
-        $('.explored').css('cursor', 'pointer');
-        $('.flag').css('cursor', 's-resize');
-      }
-    };
+      if (e.altKey) this.setState({altPressed: true});
+    }.bind(this);
 
     window.onkeyup = function(e){
-      $('.tile').css('cursor', 'pointer');
-    };
+      if (this.state.altPressed) this.setState({altPressed: false});
+    }.bind(this);
   },
 
   updateGame: function(tile, flagged) {
@@ -119,7 +115,10 @@ var Game = React.createClass({
             {this.printTime()}
           </div>
         </div>
-        <Board board={this.state.board} updateGame={this.updateGame}/>
+        <Board
+          board={this.state.board}
+          updateGame={this.updateGame}
+          altKey={this.state.altPressed}/>
         {gameStatus}
         {modal}
       </div>

@@ -93,6 +93,18 @@ body {
   cursor: pointer;
 }
 
+.tile.flagging {
+  cursor: n-resize;
+}
+
+.tile.flag.flagging {
+  cursor: s-resize;
+}
+
+.tile.explored.flagging {
+  cursor: pointer;
+}
+
 .tile:hover {
   background: lightgrey;
 }

@@ -3,7 +3,9 @@ var React = require('react');
 var Tile = React.createClass({
   render: function() {
     return (
-      <div className={'tile ' + this.classNames()} onClick={this.handleClick}>
+      <div
+        className={'tile ' + this.classNames()}
+        onClick={this.handleClick}>
         {this.value()}
       </div>
     );
@@ -18,14 +20,21 @@ var Tile = React.createClass({
   classNames: function(){
     var tile = this.props.tile;
 
-    if (tile.flagged){
-      return 'flag';
-    } else if (!tile.explored){
-      return '';
-    } else if (tile.mine){
-      return 'mine';
+    var flagging = this.props.altKey;
+    if (flagging){
+      flagging = 'flagging ';
     } else {
-      return 'explored';
+      flagging = '';
+    }
+
+    if (tile.flagged){
+      return flagging + 'flag';
+    } else if (!tile.explored){
+      return flagging;
+    } else if (tile.mine){
+      return flagging + 'mine';
+    } else {
+      return flagging + 'explored';
     }
   },
 

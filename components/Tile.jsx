@@ -1,13 +1,10 @@
 var React = require('react');
 
 var Tile = React.createClass({
-
   render: function() {
-    var classNames = 'tile ' + this.tileStatus();
-
     return (
-      <div className={classNames} onClick={this.handleClick}>
-        {this.printTile()}
+      <div className={'tile ' + this.classNames()} onClick={this.handleClick}>
+        {this.value()}
       </div>
     );
   },
@@ -18,7 +15,7 @@ var Tile = React.createClass({
     this.props.updateGame(this.props.tile, flagClick);
   },
 
-  tileStatus: function(){
+  classNames: function(){
     var tile = this.props.tile;
 
     if (tile.flagged){
@@ -32,20 +29,19 @@ var Tile = React.createClass({
     }
   },
 
-  printTile: function(){
+  value: function(){
     var tile = this.props.tile;
 
-    if (tile.flagged) return 'F';
-    if (!tile.explored) return '';
-
-    if (tile.mine){
+    if (tile.flagged){
+      return 'F';
+    } else if (!tile.explored){
+      return '';
+    } else if (tile.mine){
       return 'X';
-    }
-    else {
+    } else {
       var mineCount = this.props.board.adjacentMineCount(tile);
-      if (mineCount !== 0){
-        return mineCount;
-      }
+      if (mineCount !== 0) return mineCount;
+      return '';
     }
   }
 

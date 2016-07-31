@@ -21296,7 +21296,7 @@
 	        key: i * board.gridSize + j,
 	        updateGame: this.props.updateGame,
 	        board: board,
-	        altPressed: this.props.altKey });
+	        altPressed: this.props.altPressed });
 	    }.bind(this));
 	  }
 	

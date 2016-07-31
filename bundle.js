@@ -21401,6 +21401,10 @@
 	  }
 	};
 	
+	Tile.prototype.explore = function () {
+	  this.explored = true;
+	};
+	
 	function Board(gridSize, numMines) {
 	  this.gridSize = gridSize;
 	  this.numMines = numMines;
@@ -21460,7 +21464,7 @@
 	
 	Board.prototype.won = function () {
 	  var mineCount = Math.pow(this.gridSize, 2);
-	  return mineCount - this.flagCount - this.exploredTileCount === 0 && !this.lost();
+	  return mineCount - this.flagCount - this.exploredTileCount === 0;
 	};
 	
 	Board.prototype.lost = function () {
@@ -21486,13 +21490,18 @@
 	};
 	
 	Board.prototype.explore = function (tile) {
-	  if (tile.flagged || tile.explored) return tile;
+	  if (tile.flagged || tile.explored) return;
 	
-	  if (tile.mine) this.mineTripped = true;
-	  tile.explored = true;
+	  tile.explore();
+	
+	  if (tile.mine) {
+	    this.mineTripped = true;
+	    return;
+	  }
+	
 	  this.exploredTileCount += 1;
 	
-	  if (this.adjacentMineCount(tile) === 0 && !tile.mine) {
+	  if (this.adjacentMineCount(tile) === 0) {
 	    this.neighboringPositions(tile).forEach(function (pos) {
 	      this.explore(this.grid[pos[0]][pos[1]]);
 	    }.bind(this));

@@ -21334,7 +21334,7 @@
 	  classNames: function classNames() {
 	    var tile = this.props.tile;
 	
-	    var flagging = this.props.altKey;
+	    var flagging = this.props.altPressed;
 	    if (flagging) {
 	      flagging = 'flagging ';
 	    } else {
@@ -21356,11 +21356,11 @@
 	    var tile = this.props.tile;
 	
 	    if (tile.flagged) {
-	      return 'F';
+	      return React.createElement('img', { src: './docs/flag.png' });
 	    } else if (!tile.explored) {
 	      return '';
 	    } else if (tile.mine) {
-	      return 'X';
+	      return React.createElement('img', { src: './docs/mine.png' });
 	    } else {
 	      var mineCount = this.props.board.adjacentMineCount(tile);
 	      if (mineCount !== 0) return mineCount;

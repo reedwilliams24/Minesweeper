@@ -118,7 +118,7 @@ var Game = React.createClass({
         <Board
           board={this.state.board}
           updateGame={this.updateGame}
-          altKey={this.state.altPressed}/>
+          altPressed={this.state.altPressed}/>
         {gameStatus}
         {modal}
       </div>

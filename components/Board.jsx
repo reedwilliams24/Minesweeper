@@ -30,7 +30,7 @@ var Board = React.createClass({
           key={i * board.gridSize + j}
           updateGame={this.props.updateGame}
           board={board}
-          altKey={this.props.altKey}/>
+          altPressed={this.props.altPressed}/>
       );
     }.bind(this));
   }

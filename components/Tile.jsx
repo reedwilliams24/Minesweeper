@@ -20,7 +20,7 @@ var Tile = React.createClass({
   classNames: function(){
     var tile = this.props.tile;
 
-    var flagging = this.props.altKey;
+    var flagging = this.props.altPressed;
     if (flagging){
       flagging = 'flagging ';
     } else {

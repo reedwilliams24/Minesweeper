@@ -42,11 +42,11 @@ var Tile = React.createClass({
     var tile = this.props.tile;
 
     if (tile.flagged){
-      return 'F';
+      return <img src='./docs/flag.png'></img>;
     } else if (!tile.explored){
       return '';
     } else if (tile.mine){
-      return 'X';
+      return <img src='./docs/mine.png'></img>;
     } else {
       var mineCount = this.props.board.adjacentMineCount(tile);
       if (mineCount !== 0) return mineCount;

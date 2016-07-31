@@ -19,7 +19,6 @@ var Tile = React.createClass({
 
   classNames: function(){
     var tile = this.props.tile;
-    console.log('hi', this.props.altPressed);
 
     var flagging = this.props.altPressed;
     if (flagging){

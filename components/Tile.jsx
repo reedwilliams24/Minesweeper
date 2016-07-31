@@ -20,13 +20,13 @@ var Tile = React.createClass({
 
   tileStatus: function(){
     var tile = this.props.tile;
-    if (tile.flagged && !tile.explored) return 'flag';
-    if (!tile.explored) return '';
 
-    if (tile.mine === true){
-      return 'mine';
-    } else if (tile.flagged === true){
+    if (tile.flagged){
       return 'flag';
+    } else if (!tile.explored){
+      return '';
+    } else if (tile.mine){
+      return 'mine';
     } else {
       return 'explored';
     }
@@ -42,7 +42,6 @@ var Tile = React.createClass({
       return 'X';
     }
     else {
-      // var mineCount = tile.adjacentMineCount();
       var mineCount = this.props.board.adjacentMineCount(tile);
       if (mineCount !== 0){
         return mineCount;

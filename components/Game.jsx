@@ -1,44 +1,54 @@
 var React = require('react');
 var Board = require('./Board');
 var Minesweeper = require('../minesweeper');
-var $ = require('jquery');
 
 var Game = React.createClass({
   getInitialState: function() {
     var board = new Minesweeper.Board(10, 10);
     return {
       board: board,
-      secondsElapsed: 0
+      secondsElapsed: 0,
+      altPressed: false
     };
   },
-  
+
   componentDidMount: function() {
     window.onkeydown = function(e){
-      if (e.altKey){
-        $('.tile').css('cursor', 'n-resize');
-        $('.explored').css('cursor', 'pointer');
-        $('.flag').css('cursor', 's-resize');
-      }
-    };
+      if (e.altKey) this.setState({altPressed: true});
+    }.bind(this);
 
     window.onkeyup = function(e){
-      $('.tile').css('cursor', 'pointer');
-    };
+      if (this.state.altPressed) this.setState({altPressed: false});
+    }.bind(this);
   },
 
   updateGame: function(tile, flagged) {
+    if (tile.explored) return tile;
+
+    var board = this.state.board;
     if (flagged){
       tile.toggleFlag();
-      if (this.state.board.numBombs - this.state.board.flagCount < 0) {
-        tile.toggleFlag();
+
+      if (tile.flagged){
+        board.increaseFlagCount();
+      } else {
+        board.decreaseFlagCount();
       }
+
+      // not enough flags
+      if (this.state.board.numMines - this.state.board.flagCount < 0) {
+        tile.toggleFlag();
+        board.decreaseFlagCount();
+      }
+
     } else {
-      tile.explore();
+      this.state.board.explore(tile);
     }
 
     if (this.state.intervalId === undefined) this.startTimer();
+    if (board.gameOver()) this.stopTimer();
 
-    this.setState({ board: this.state.board});
+    this.setState({ board: board});
   },
 
   restartGame: function() {
@@ -52,28 +62,28 @@ var Game = React.createClass({
   },
 
   startTimer: function(){
-    var id = window.setInterval(function(){
-      this.setState({
-        secondsElapsed: this.state.secondsElapsed + 1
-      });
-    }.bind(this), 1000);
-
-    this.setState({intervalId: id});
+    // start timer if a mine was not tripped
+    if (!this.state.board.gameOver()){
+      var id = window.setInterval(function(){
+        this.setState({
+          secondsElapsed: this.state.secondsElapsed + 1
+        });
+      }.bind(this), 1000);
+      this.setState({intervalId: id});
+    }
   },
 
   stopTimer: function() {
     window.clearInterval(this.state.intervalId);
   },
 
-
   render: function() {
     var gameStatus;
     var modal;
 
     if (this.state.board.gameOver()){
-      this.stopTimer();
-
       var gameText;
+
       if (this.state.board.won()) {
         gameText = 'Winner!';
       } else {
@@ -99,13 +109,16 @@ var Game = React.createClass({
       <div id='game'>
         <div id='info'>
           <div id='flag-count'>
-            {this.state.board.numBombs - this.state.board.flagCount}
+            {this.state.board.numMines - this.state.board.flagCount}
           </div>
           <div id='timer'>
             {this.printTime()}
           </div>
         </div>
-        <Board board={this.state.board} updateGame={this.updateGame}/>
+        <Board
+          board={this.state.board}
+          updateGame={this.updateGame}
+          altKey={this.state.altPressed}/>
         {gameStatus}
         {modal}
       </div>

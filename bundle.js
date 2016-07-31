@@ -21130,6 +21130,7 @@
 	    if (tile.explored) return tile;
 	
 	    var board = this.state.board;
+	
 	    if (flagged) {
 	      tile.toggleFlag();
 	

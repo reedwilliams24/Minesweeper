@@ -2,6 +2,11 @@ body {
   font-family: arial;
 }
 
+img {
+  width: 20px;
+  height: 20px;
+}
+
 #game {
   display: flex;
   flex-direction: column;

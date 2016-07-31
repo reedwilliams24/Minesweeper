@@ -1,106 +1,61 @@
-function Tile (board, pos) {
-  this.board = board;
+function Tile (pos) {
   this.pos = pos;
-  this.bombed = false;
+  this.mine = false;
   this.explored = false;
   this.flagged = false;
 }
 
-Tile.prototype.plantBomb = function () {
-  this.bombed = true;
-};
-
-Tile.prototype.removeBomb = function () {
-  this.bombed = false;
+Tile.prototype.toggleMine = function () {
+  if (this.mine) {
+    this.mine = false;
+  } else {
+    this.mine = true;
+  }
 };
 
 Tile.prototype.toggleFlag = function () {
-  if (this.explored) return this;
-
   if (this.flagged){
     this.flagged = false;
-    this.board.decreaseFlagCount();
   } else {
     this.flagged = true;
-    this.board.increaseFlagCount();
   }
 };
 
-Tile.prototype.explore = function () {
-  if (this.flagged || this.explored){
-    return this;
-  }
-
-  this.explored = true;
-
-  if (this.adjacentBombCount() === 0 && !this.bombed){
-    this.neighboringPositions().forEach(function(pos){
-      this.board.grid[pos[0]][pos[1]].explore();
-    }.bind(this));
-  }
-};
-
-Tile.DELTAS = [
-  [1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1],[0,-1],[1,-1]
-]
-
-Tile.prototype.adjacentBombCount = function(){
-  var count = 0;
-
-  this.neighboringPositions().forEach(function(pos){
-    if (this.board.grid[pos[0]][pos[1]].bombed) count+=1;
-  }.bind(this));
-
-  return count;
-};
-
-Tile.prototype.neighboringPositions = function(){
-  var neighbors = [];
-
-  Tile.DELTAS.forEach(function(delta){
-    var newPos = [this.pos[0] + delta[0], this.pos[1] + delta[1]];
-    if (this.board.inBounds(newPos)){
-      neighbors.push(newPos);
-    }
-  }.bind(this));
-
-  return neighbors;
-};
-
-function Board (gridSize, numBombs) {
+function Board (gridSize, numMines) {
   this.gridSize = gridSize;
-  this.numBombs = numBombs;
+  this.numMines = numMines;
   this.grid = [];
   this.flagCount = 0;
+  this.exploredTileCount = 0;
+  this.mineTripped = false;
   this.generateBoard();
-  this.plantBombs();
+  this.plantMines();
 }
 
 Board.prototype.generateBoard = function () {
   for (var row = 0; row < this.gridSize; row++){
     this.grid.push([]);
     for (var col = 0; col < this.gridSize; col++){
-      var tile = new Tile(this, [row, col]);
+      var tile = new Tile([row, col]);
       this.grid[row].push(tile);
     }
   }
 };
 
-Board.prototype.plantBombs = function() {
+Board.prototype.plantMines = function() {
+  // plant mines in a row
+  var mineCount = 0;
 
-  // plant bombs in a row
-  var bombCount = 0;
-  
   for (var row = 0; row < this.gridSize; row++){
     for (var col = 0; col < this.gridSize; col++){
-      this.grid[col][row].plantBomb();
-      bombCount += 1;
-      if (bombCount === this.numBombs) break;
+      this.grid[col][row].toggleMine();
+      mineCount += 1;
+      if (mineCount === this.numMines) break;
     }
-    if (bombCount === this.numBombs) break;
+    if (mineCount === this.numMines) break;
   }
 
-  // shuffle bomb placement
+  // shuffle mine placement
   var positions = [];
   for (row = 0; row < this.gridSize; row++){
     for (col = 0; col < this.gridSize; col++){
@@ -109,14 +64,9 @@ Board.prototype.plantBombs = function() {
         var currentTile = this.grid[col][row];
         var otherTile = this.grid[randomPosition[0]][randomPosition[1]];
 
-        if ((currentTile.bombed && !otherTile.bombed) || (!currentTile.bombed && otherTile.bombed)){
-          if (currentTile.bombed){
-            currentTile.removeBomb();
-            otherTile.plantBomb();
-          } else {
-            otherTile.removeBomb();
-            currentTile.plantBomb();
-          }
+        if ((currentTile.mine && !otherTile.mine) || (!currentTile.mine && otherTile.mine)){
+          currentTile.toggleMine();
+          otherTile.toggleMine();
         }
       }
       positions.push([col, row]);
@@ -124,42 +74,21 @@ Board.prototype.plantBombs = function() {
   }
 };
 
-Board.prototype.inBounds = function (pos) {
-  return (
-    pos[0] >= 0 && pos[0] < this.gridSize &&
-    pos[1] >= 0 && pos[1] < this.gridSize
-  );
-};
-
 Board.prototype.gameOver = function () {
-  var won = true;
-  var lost = false;
-
-  this.grid.forEach(function(row){
-    row.forEach(function(tile){
-      if (tile.bombed && tile.explored) lost = true;
-      if ((tile.bombed && !tile.flagged) || (!tile.bombed && !tile.explored)){
-        won = false;
-      }
-    })
-  });
-
-  return (won || lost);
+  return (this.won() || this.lost());
 };
 
 Board.prototype.won = function () {
-  var won = true;
-
-  this.grid.forEach(function(row){
-    row.forEach(function(tile){
-      if ((tile.bombed && !tile.flagged) || (!tile.bombed && !tile.explored)){
-        won = false;
-      }
-    })
-  });
-
-  return won;
+  var mineCount = Math.pow(this.gridSize, 2);
+  return (
+    (mineCount - this.flagCount - this.exploredTileCount) === 0 && !this.lost()
+  );
 };
+
+Board.prototype.lost = function () {
+  return this.mineTripped;
+};
+
 
 Board.prototype.increaseFlagCount = function() {
   this.flagCount += 1;
@@ -169,7 +98,51 @@ Board.prototype.decreaseFlagCount = function() {
   this.flagCount -= 1;
 }
 
+Board.prototype.adjacentMineCount = function (tile) {
+  var count = 0;
 
+  this.neighboringPositions(tile).forEach(function(pos){
+    if (this.grid[pos[0]][pos[1]].mine) count+=1;
+  }.bind(this));
+
+  return count;
+};
+
+Board.prototype.explore = function (tile) {
+  if (tile.flagged || tile.explored) return tile;
+
+  if (tile.mine) this.mineTripped = true;
+  tile.explored = true;
+  this.exploredTileCount += 1;
+
+  if (this.adjacentMineCount(tile) === 0 && !tile.mine){
+    this.neighboringPositions(tile).forEach(function(pos){
+      this.explore(this.grid[pos[0]][pos[1]]);
+    }.bind(this));
+  }
+};
+
+Board.prototype.neighboringPositions = function (tile) {
+  var neighbors = [];
+
+  Board.DELTAS.forEach(function(delta){
+    var newPos = [tile.pos[0] + delta[0], tile.pos[1] + delta[1]];
+    if (this.inBounds(newPos)) neighbors.push(newPos);
+  }.bind(this));
+
+  return neighbors;
+};
+
+Board.prototype.inBounds = function (pos) {
+  return (
+    pos[0] >= 0 && pos[0] < this.gridSize &&
+    pos[1] >= 0 && pos[1] < this.gridSize
+  );
+};
+
+Board.DELTAS = [
+  [1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1],[0,-1],[1,-1]
+];
 
 module.exports = {
   Tile,
